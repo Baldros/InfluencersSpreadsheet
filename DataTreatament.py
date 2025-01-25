@@ -12,7 +12,7 @@ import pdfplumber
 from typing import List
 
 # Funções ######################################################################
-def download_and_process_pdf(download_url: str,
+def download_data(download_url: str,
                              output_file: str = "planilhaInfluencers",
                              extension: str = ".pdf") -> str:
     """
