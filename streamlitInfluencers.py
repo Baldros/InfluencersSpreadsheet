@@ -161,7 +161,7 @@ if __name__ == "__main__":
     url = f"https://drive.google.com/uc?id=1oq1nPOKMWAHCCdRzlRJZsaKFsgrrDmjH&export=download"
 
     # Download dos dados:
-    path = download_data(url)
+    path,_ = download_data(url)
 
     # Tratamento dos dados:
     dataframe = pdf_to_dataframe(path)
