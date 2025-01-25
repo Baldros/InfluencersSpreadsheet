@@ -74,7 +74,7 @@ def main(dataframe : pd.DataFrame = None):
         st.write("""
                 Acesse a seguinte página para ter acesso ao conjunto de dados.
                  
-                https://github.com/Baldros/InfluencersSpreadsheet/blob/main/influenciadores.csv
+                https://github.com/Baldros/InfluencersSpreadsheet/blob/main/PlanilhaInfluenciadores.csv                
                 """)
         upload_file = st.file_uploader("Escolha um arquivo", type=["pdf", "csv"], key="file_uploader_1")
 
