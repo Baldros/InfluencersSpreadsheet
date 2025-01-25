@@ -2,49 +2,67 @@
 import requests
 
 # Bibliotecas para Tratamento dos dados:
-from tabula import read_pdf
+#from tabula import read_pdf
 import pandas as pd
 import numpy as np
+import pdfplumber
+
 
 # Biblioteca para type hint:
 from typing import List
 
 # Funções ######################################################################
-def download_data(download_url: str,
-                  output_file : str = "planilhaInfluencers",
-                  extension : str = ".pdf") -> str:
-
+def download_and_process_pdf(download_url: str,
+                             output_file: str = "planilhaInfluencers",
+                             extension: str = ".pdf") -> str:
     """
-    Função construida para baixar o conjunto de dados tendo um
-    determinado link. A saída é o próprio caminho onde o arquivo
-    foi salvo.
-
+    Função para baixar o conjunto de dados e extrair tabelas de um arquivo PDF.
+    
     # Entrada:
-    - string: url da página
-    - string: caminho onde o arquivo será baixado
-
+    - download_url (string): URL de onde o PDF será baixado.
+    - output_file (string): Caminho onde o arquivo será salvo (sem a extensão).
+    - extension (string): Extensão do arquivo (default: ".pdf").
+    
     # Saída:
-    - string: Diretório completo.
+    - path (string): Caminho completo onde o arquivo foi salvo.
+    - tables (list): Lista de tabelas extraídas do PDF.
     """
-
+    
     try:
-        # Fazer a solicitação ao Google Drive
+        # Fazer a solicitação ao link para download
         response = requests.get(download_url, stream=True)
-        response.raise_for_status()  # Verificar se houve erro
-
+        response.raise_for_status()  # Verificar se houve erro na solicitação
+        
+        # Definir o caminho onde o PDF será salvo
         path = output_file + extension
-
-        # Escrever o conteúdo em um arquivo local
+        
+        # Salvar o arquivo no diretório
         with open(path, "wb") as file:
             for chunk in response.iter_content(chunk_size=8192):
                 if chunk:  # Filtrar chunks vazios
                     file.write(chunk)
+        
+        print(f"Arquivo baixado com sucesso: {path}")
+        
+        # Abrir o PDF usando pdfplumber para extrair as tabelas
+        with pdfplumber.open(path) as pdf:
+            tables = []
+            for page in pdf.pages:
+                table = page.extract_table()  # Extrair a tabela da página
+                if table:
+                    tables.append(table)  # Adicionar a tabela extraída à lista
 
-        print(f"Arquivo baixado com sucesso: {output_file}")
+        if tables:
+            print(f"{len(tables)} tabela(s) extraída(s) com sucesso.")
+        else:
+            print("Nenhuma tabela encontrada no PDF.")
+        
     except Exception as e:
-        print(f"Erro ao baixar o arquivo: {e}")
+        print(f"Erro ao baixar ou processar o arquivo: {e}")
+        tables = []
+    
+    return path, tables  # Retorna o caminho do arquivo e as tabelas extraídas
 
-    return path
 
 
 def pdf_to_dataframe(pdf_path: str) -> pd.DataFrame:
