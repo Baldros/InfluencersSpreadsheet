@@ -156,5 +156,13 @@ def main(dataframe : pd.DataFrame = None):
 if __name__ == "__main__":
 
     # Importando os dados apenas uma vez
-    df = get_data_from_url()
+    #df = get_data_from_url()
+    # url da pagina:
+    url = f"https://drive.google.com/uc?id=1oq1nPOKMWAHCCdRzlRJZsaKFsgrrDmjH&export=download"
+
+    # Download dos dados:
+    path = download_data(url)
+
+    # Tratamento dos dados:
+    dataframe = pdf_to_dataframe(path)
     main(df)
