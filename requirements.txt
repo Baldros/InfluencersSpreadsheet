@@ -1,3 +1,5 @@
 tabula-py
 pandas
 streamlit
+matplotlib
+numpy
