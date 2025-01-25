@@ -4,7 +4,7 @@ from DataTreatament import *
 from EDAInfluencers import *
 
 # Função para download com cache
-@st.cache_data
+#@st.cache_data
 def get_data_from_url():
     """
     Faz o download dos dados apenas uma vez e os retorna.
